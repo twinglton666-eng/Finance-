@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Финансы">
+<title>Финансы</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#080810;--surface:#0f0f1a;--card:#141420;--card2:#1a1a28;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.1);
+  --text:#f2f2f7;--sub:#8e8ea0;--dim:#4a4a5a;
+  --green:#30d158;--green-d:rgba(48,209,88,0.12);
+  --red:#ff453a;--red-d:rgba(255,69,58,0.12);
+  --blue:#0a84ff;--blue-d:rgba(10,132,255,0.12);
+  --gold:#ffd60a;--gold-d:rgba(255,214,10,0.12);
+  --orange:#ff9f0a;--purple:#bf5af2;
+}
+html,body{background:var(--bg);color:var(--text);font-family:'Inter',-apple-system,sans-serif;min-height:100vh;max-width:430px;margin:0 auto;overflow-x:hidden}
+.page{display:none;min-height:100vh;padding-bottom:92px}
+.page.active{display:block}
+.ss{height:54px}
+.phead{padding:0 20px 14px;display:flex;align-items:flex-start;justify-content:space-between}
+.ph-sub{font-size:11px;font-weight:600;color:var(--blue);letter-spacing:.5px;text-transform:uppercase;margin-bottom:2px}
+.ph-title{font-size:26px;font-weight:900;letter-spacing:-.5px}
+.mnav{display:flex;align-items:center;gap:8px;margin-top:6px}
+.mb{width:34px;height:34px;border-radius:50%;background:var(--card2);border:1px solid var(--border2);color:var(--text);font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+/* HERO */
+.hero{margin:0 16px 10px;background:var(--card);border:1px solid var(--border2);border-radius:24px;padding:20px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-60px;right:-60px;width:160px;height:160px;background:radial-gradient(circle,rgba(48,209,88,.06) 0%,transparent 70%);pointer-events:none}
+.hero-lbl{font-size:11px;font-weight:600;color:var(--sub);letter-spacing:.8px;text-transform:uppercase;margin-bottom:6px}
+.hero-num{font-size:44px;font-weight:900;letter-spacing:-2px;line-height:1;margin-bottom:16px}
+.hero-num.pos{color:var(--green)}.hero-num.neg{color:var(--red)}.hero-num.zer{color:var(--text)}
+.hero-row{display:flex}
+.hc{flex:1}
+.hc+.hc{border-left:1px solid var(--border);padding-left:14px;margin-left:14px}
+.hc-lbl{font-size:10px;color:var(--sub);font-weight:600;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px}
+.hc-val{font-size:16px;font-weight:700}
+.hc-val.u{color:var(--green)}.hc-val.d{color:var(--red)}.hc-val.g{color:var(--gold)}
+.spark{position:absolute;bottom:16px;right:16px}
+/* PERIOD PILLS */
+.pp{display:flex;gap:6px;padding:0 16px;margin-bottom:10px}
+.pp-item{flex:1;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:10px 6px;text-align:center;cursor:pointer}
+.pp-item.on{background:var(--card2);border-color:var(--border2)}
+.pp-lbl{font-size:9px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.4px}
+.pp-val{font-size:14px;font-weight:800;color:var(--text);margin-top:3px}
+/* SAVED CHIP */
+.sc{margin:0 16px 10px;background:var(--gold-d);border:1px solid rgba(255,214,10,.2);border-radius:16px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between}
+.sc-l{display:flex;align-items:center;gap:10px}
+.sc-icon{font-size:20px}
+.sc-lbl{font-size:10px;color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.sc-val{font-size:19px;font-weight:800;color:var(--gold)}
+.sc-pct{font-size:13px;font-weight:700;color:var(--gold)}
+/* TIP */
+.tip{margin:0 16px 14px;background:rgba(10,132,255,.07);border:1px solid rgba(10,132,255,.15);border-radius:16px;padding:12px 14px;display:flex;gap:10px}
+.tip-ic{font-size:15px;flex-shrink:0;margin-top:1px}
+.tip-ttl{font-size:10px;font-weight:700;color:var(--blue);letter-spacing:.8px;text-transform:uppercase;margin-bottom:3px}
+.tip-txt{font-size:13px;color:rgba(242,242,247,.75);font-weight:400;line-height:1.5}
+/* SECTION */
+.sec{margin:0 16px 14px}
+.sec-ttl{font-size:12px;font-weight:700;color:var(--sub);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
+/* SPLIT */
+.split{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.scard{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:14px}
+.scard-h{display:flex;align-items:center;gap:6px;margin-bottom:8px}
+.sdot{width:7px;height:7px;border-radius:50%}
+.sdot.g{background:var(--green)}.sdot.r{background:var(--red)}
+.scard-lbl{font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.5px}
+.scard-tot{font-size:18px;font-weight:800;margin-bottom:8px}
+.scard-tot.g{color:var(--green)}.scard-tot.r{color:var(--red)}
+.srow{font-size:11px;color:var(--sub);margin-bottom:4px;display:flex;justify-content:space-between;gap:4px}
+.srow span{color:var(--text);font-weight:600;flex-shrink:0}
+/* TX LIST */
+.txl{display:flex;flex-direction:column;gap:6px}
+.txi{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:12px 14px;display:flex;align-items:center;gap:12px}
+.txi:active{background:var(--card2)}
+.txic{width:42px;height:42px;border-radius:13px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.txic.income{background:var(--green-d)}.txic.expense{background:var(--red-d)}.txic.saving{background:var(--gold-d)}
+.txb{flex:1;min-width:0}
+.txn{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.txm{font-size:11px;color:var(--sub);margin-top:2px}
+.txr{text-align:right;flex-shrink:0}
+.txa{font-size:15px;font-weight:700}
+.txa.income{color:var(--green)}.txa.expense{color:var(--red)}.txa.saving{color:var(--gold)}
+.empty{text-align:center;padding:28px 16px}
+.empty-ic{font-size:34px;margin-bottom:8px}
+.empty-tx{font-size:13px;color:var(--sub);font-weight:500}
+/* ADD */
+.awrap{padding:0 16px}
+.trow{display:flex;gap:8px;margin-bottom:18px}
+.tpill{flex:1;padding:12px 4px;background:var(--card);border:1px solid var(--border);border-radius:14px;text-align:center;cursor:pointer;transition:all .15s;font-family:inherit}
+.tpill-ic{font-size:20px;margin-bottom:4px}
+.tpill-lbl{font-size:11px;font-weight:700;color:var(--sub)}
+.tpill.ti.on{background:var(--green-d);border-color:rgba(48,209,88,.3)}.tpill.ti.on .tpill-lbl{color:var(--green)}
+.tpill.te.on{background:var(--red-d);border-color:rgba(255,69,58,.3)}.tpill.te.on .tpill-lbl{color:var(--red)}
+.tpill.ts.on{background:var(--gold-d);border-color:rgba(255,214,10,.3)}.tpill.ts.on .tpill-lbl{color:var(--gold)}
+.amtbox{background:var(--card);border:1px solid var(--border2);border-radius:20px;padding:18px;text-align:center;margin-bottom:16px}
+.amtbox-lbl{font-size:10px;color:var(--sub);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px}
+.amtbox input{background:none;border:none;outline:none;font-size:46px;font-weight:900;letter-spacing:-2px;color:var(--text);text-align:center;width:100%;font-family:inherit}
+.amtbox input::placeholder{color:var(--dim)}
+.flbl{font-size:11px;font-weight:700;color:var(--sub);letter-spacing:.5px;text-transform:uppercase;margin-bottom:7px}
+.finput{width:100%;background:var(--card);border:1px solid var(--border2);border-radius:14px;padding:13px 15px;color:var(--text);font-size:15px;font-family:inherit;font-weight:500;outline:none;margin-bottom:14px}
+.finput:focus{border-color:rgba(255,255,255,.2)}
+.finput::placeholder{color:var(--dim)}
+.cgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:16px}
+.cchip{background:var(--card);border:1px solid var(--border);border-radius:13px;padding:10px 3px;text-align:center;cursor:pointer;transition:all .15s}
+.cchip-ic{font-size:21px;margin-bottom:3px}
+.cchip-nm{font-size:9px;font-weight:600;color:var(--sub)}
+.cchip.on{background:var(--blue-d);border-color:rgba(10,132,255,.3)}.cchip.on .cchip-nm{color:var(--blue)}
+.abtn{width:100%;padding:15px;border-radius:16px;background:var(--text);color:var(--bg);border:none;font-size:16px;font-weight:800;cursor:pointer;font-family:inherit;margin-top:2px}
+.abtn:active{opacity:.85}
+/* BARS */
+.bitem{margin-bottom:12px}
+.bhead{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.bnm{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.bval{font-size:13px;font-weight:700}
+.btrack{height:5px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden}
+.bfill{height:100%;border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+/* GOALS */
+.gcard{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:16px;margin-bottom:8px}
+.ghead{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
+.gnm{font-size:15px;font-weight:700}
+.gamt{font-size:20px;font-weight:800;color:var(--gold)}
+.gtrack{height:7px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden;margin-bottom:8px}
+.gfill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gold),var(--orange));transition:width .6s}
+.gfoot{display:flex;justify-content:space-between;align-items:center}
+.gpct{font-size:12px;font-weight:700;color:var(--gold)}
+.gtgt{font-size:12px;color:var(--sub)}
+.gdel{background:none;border:none;font-size:14px;color:var(--dim);cursor:pointer;padding:4px}
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:rgba(8,8,16,.97);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-top:1px solid var(--border2);display:flex;align-items:center;padding:10px 12px 28px;z-index:999;gap:4px}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;background:none;border:none;cursor:pointer;padding:6px 2px;font-family:inherit;position:relative}
+.nb-ic{font-size:22px;line-height:1}
+.nb-lbl{font-size:9px;font-weight:600;color:var(--dim);letter-spacing:.3px}
+.nb.on .nb-lbl{color:var(--text)}
+.nb.on::after{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:20px;height:2px;background:var(--text);border-radius:99px}
+.fab{width:50px;height:50px;border-radius:16px;background:var(--text);color:var(--bg);border:none;cursor:pointer;font-size:26px;font-weight:300;display:flex;align-items:center;justify-content:center;margin-top:-12px;flex-shrink:0;box-shadow:0 4px 24px rgba(242,242,247,.12);font-family:inherit}
+</style>
+</head>
+<body>
+
+<!-- HOME -->
+
+<div class="page active" id="pg-home">
+  <div class="ss"></div>
+  <div class="phead">
+    <div>
+      <div class="ph-sub" id="hp-sub"></div>
+      <div class="ph-title">Финансы 💰</div>
+    </div>
+    <div class="mnav">
+      <button class="mb" onclick="chM(-1)">‹</button>
+      <button class="mb" onclick="chM(1)">›</button>
+    </div>
+  </div>
+  <div class="hero">
+    <div class="hero-lbl">Общий остаток</div>
+    <div class="hero-num zer" id="hbal">0 ₽</div>
+    <div class="hero-row">
+      <div class="hc"><div class="hc-lbl">Доходы</div><div class="hc-val u" id="hinc">0 ₽</div></div>
+      <div class="hc"><div class="hc-lbl">Расходы</div><div class="hc-val d" id="hexp">0 ₽</div></div>
+      <div class="hc"><div class="hc-lbl">Накоплено</div><div class="hc-val g" id="hsav">0 ₽</div></div>
+    </div>
+    <div class="spark"><canvas id="cv" width="80" height="40"></canvas></div>
+  </div>
+  <div class="pp">
+    <div class="pp-item on"><div class="pp-lbl">Сегодня</div><div class="pp-val" id="ptd">0 ₽</div></div>
+    <div class="pp-item"><div class="pp-lbl">7 дней</div><div class="pp-val" id="pw">0 ₽</div></div>
+    <div class="pp-item"><div class="pp-lbl">Месяц</div><div class="pp-val" id="pm">0 ₽</div></div>
+  </div>
+  <div class="sc" id="scChip" style="display:none">
+    <div class="sc-l"><div class="sc-icon">🏦</div><div><div class="sc-lbl">Накоплено</div><div class="sc-val" id="scVal">0 ₽</div></div></div>
+    <div class="sc-pct" id="scPct">0%</div>
+  </div>
+  <div class="tip"><div class="tip-ic">💡</div><div><div class="tip-ttl">Совет дня</div><div class="tip-txt" id="tipT"></div></div></div>
+  <div class="sec">
+    <div class="sec-ttl" id="splitLbl"></div>
+    <div class="split">
+      <div class="scard">
+        <div class="scard-h"><div class="sdot g"></div><div class="scard-lbl">Доходы</div></div>
+        <div class="scard-tot g" id="spInc">0 ₽</div>
+        <div id="spIncL"></div>
+      </div>
+      <div class="scard">
+        <div class="scard-h"><div class="sdot r"></div><div class="scard-lbl">Расходы</div></div>
+        <div class="scard-tot r" id="spExp">0 ₽</div>
+        <div id="spExpL"></div>
+      </div>
+    </div>
+  </div>
+  <div class="sec">
+    <div class="sec-ttl">Последние операции</div>
+    <div class="txl" id="recList"></div>
+  </div>
+</div>
+
+<!-- ADD -->
+
+<div class="page" id="pg-add">
+  <div class="ss"></div>
+  <div class="phead"><div><div class="ph-title">Добавить ➕</div></div></div>
+  <div class="awrap">
+    <div class="trow">
+      <div class="tpill ti on" onclick="st('income')"><div class="tpill-ic">📈</div><div class="tpill-lbl">Доход</div></div>
+      <div class="tpill te" onclick="st('expense')"><div class="tpill-ic">📉</div><div class="tpill-lbl">Расход</div></div>
+      <div class="tpill ts" onclick="st('saving')"><div class="tpill-ic">🏦</div><div class="tpill-lbl">Накопление</div></div>
+    </div>
+    <div class="amtbox"><div class="amtbox-lbl">Сумма (₽)</div><input type="number" id="amtIn" placeholder="0" inputmode="numeric"></div>
+    <div class="flbl">Описание</div>
+    <input class="finput" type="text" id="descIn" placeholder="Например: Пятёрочка">
+    <div id="catWrap">
+      <div class="flbl">Категория</div>
+      <div class="cgrid" id="catGrid"></div>
+    </div>
+    <button class="abtn" onclick="doAdd()">Сохранить запись</button>
+  </div>
+</div>
+
+<!-- STATS -->
+
+<div class="page" id="pg-stats">
+  <div class="ss"></div>
+  <div class="phead">
+    <div><div class="ph-sub" id="sp-sub"></div><div class="ph-title">Статистика 📊</div></div>
+    <div class="mnav"><button class="mb" onclick="chM(-1)">‹</button><button class="mb" onclick="chM(1)">›</button></div>
+  </div>
+  <div class="hero">
+    <div class="hero-lbl">Баланс за период</div>
+    <div class="hero-num zer" id="stBal">0 ₽</div>
+    <div class="hero-row">
+      <div class="hc"><div class="hc-lbl">Доходы</div><div class="hc-val u" id="stInc">0 ₽</div></div>
+      <div class="hc"><div class="hc-lbl">Расходы</div><div class="hc-val d" id="stExp">0 ₽</div></div>
+    </div>
+  </div>
+  <div class="sec"><div class="sec-ttl">Расходы по категориям</div><div id="stBars"></div></div>
+  <div class="sec"><div class="sec-ttl">Все операции</div><div class="txl" id="allTx"></div></div>
+</div>
+
+<!-- SAVINGS -->
+
+<div class="page" id="pg-savings">
+  <div class="ss"></div>
+  <div class="phead"><div><div class="ph-title">Накопления 🏦</div></div></div>
+  <div class="awrap">
+    <div class="flbl">Название цели</div>
+    <input class="finput" type="text" id="gName" placeholder="Отпуск, машина, техника…">
+    <div class="flbl">Целевая сумма (₽)</div>
+    <input class="finput" type="number" id="gTarget" placeholder="100 000" inputmode="numeric">
+    <button class="abtn" onclick="doGoal()" style="margin-bottom:20px">Создать цель</button>
+  </div>
+  <div class="sec"><div class="sec-ttl">Мои цели</div><div id="goalsList"></div></div>
+</div>
+
+<!-- BOTTOM NAV -->
+
+<nav class="bnav">
+  <button class="nb on" id="nb-home" onclick="go('home')"><div class="nb-ic">🏠</div><div class="nb-lbl">Главная</div></button>
+  <button class="nb" id="nb-stats" onclick="go('stats')"><div class="nb-ic">📊</div><div class="nb-lbl">Статистика</div></button>
+  <button class="fab" onclick="go('add')">＋</button>
+  <button class="nb" id="nb-savings" onclick="go('savings')"><div class="nb-ic">🏦</div><div class="nb-lbl">Накопления</div></button>
+  <button class="nb" id="nb-add" style="opacity:0;pointer-events:none"><div class="nb-ic"> </div><div class="nb-lbl"> </div></button>
+</nav>
+
+<script>
+const MN=['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const MG=['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+const CATS={
+  expense:[{id:'food',i:'🛒',n:'Продукты'},{id:'cafe',i:'☕',n:'Кафе'},{id:'trans',i:'🚌',n:'Транспорт'},{id:'health',i:'💊',n:'Здоровье'},{id:'shop',i:'🛍',n:'Шоппинг'},{id:'fun',i:'🎬',n:'Досуг'},{id:'house',i:'🏠',n:'ЖКХ'},{id:'sport',i:'🏋️',n:'Спорт'},{id:'other',i:'📦',n:'Другое'}],
+  income:[{id:'salary',i:'💼',n:'Зарплата'},{id:'free',i:'💻',n:'Фриланс'},{id:'gift',i:'🎁',n:'Подарок'},{id:'inv',i:'📈',n:'Инвестиции'},{id:'other',i:'📦',n:'Другое'}],
+  saving:[{id:'vac',i:'✈️',n:'Отпуск'},{id:'tech',i:'📱',n:'Техника'},{id:'emrg',i:'🆘',n:'Подушка'},{id:'car',i:'🚗',n:'Авто'},{id:'other',i:'📦',n:'Другое'}]
+};
+const BCLR=['#ff453a','#ff9f0a','#ffd60a','#30d158','#0a84ff','#bf5af2','#ff6b6b'];
+const TIPS=['Записывай расходы сразу — через день забывается 40% трат.','Правило 50/30/20: нужды 50%, желания 30%, накопления 20%.','Небольшие ежедневные траты за месяц складываются в крупные суммы.','Сначала откладывай, потом трать — не наоборот.','Анализируй расходы раз в неделю. Занимает 5 минут, экономит тысячи.','Цель накопления мотивирует гораздо больше чем просто «откладывать».'];
+let S=JSON.parse(localStorage.getItem('fin3')||'{"tx":[],"goals":[]}');
+let curT='income',selC=null,curM=new Date().getMonth(),curY=new Date().getFullYear();
+function sv(){localStorage.setItem('fin3',JSON.stringify(S));}
+function fmt(n){return new Intl.NumberFormat('ru-RU').format(Math.round(Math.abs(n)))+' ₽';}
+function fs(n){return(n>=0?'+':'-')+fmt(n);}
+function mTx(m,y){return S.tx.filter(t=>{const d=new Date(t.date);return d.getMonth()===(m??curM)&&d.getFullYear()===(y??curY);});}
+function sum(arr,type){return arr.filter(t=>t.type===type).reduce((s,t)=>s+t.amount,0);}
+function go(p){
+  document.querySelectorAll('.page').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.nb').forEach(e=>e.classList.remove('on'));
+  document.getElementById('pg-'+p).classList.add('active');
+  const nb=document.getElementById('nb-'+p);
+  if(nb)nb.classList.add('on');
+  if(p==='home')rHome();
+  if(p==='stats')rStats();
+  if(p==='savings')rSavings();
+  if(p==='add')rCats();
+}
+function chM(d){
+  curM+=d;
+  if(curM>11){curM=0;curY++;}
+  if(curM<0){curM=11;curY--;}
+  rHome();rStats();
+}
+function ld(m,y){return new Date(y,m+1,0).getDate();}
+function spark(){
+  const cv=document.getElementById('cv');if(!cv)return;
+  const ctx=cv.getContext('2d'),W=80,H=40;
+  ctx.clearRect(0,0,W,H);
+  const pts=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    const dt=S.tx.filter(t=>{const td=new Date(t.date);return td.getDate()===d.getDate()&&td.getMonth()===d.getMonth()&&td.getFullYear()===d.getFullYear();});
+    pts.push(sum(dt,'income')-sum(dt,'expense'));
+  }
+  if(pts.every(p=>p===0))return;
+  const mn=Math.min(...pts),mx=Math.max(...pts),rng=mx-mn||1;
+  const nm=pts.map(p=>H-4-((p-mn)/rng)*(H-8));
+  const step=W/(pts.length-1);
+  const gr=ctx.createLinearGradient(0,0,0,H);
+  gr.addColorStop(0,'rgba(48,209,88,.25)');gr.addColorStop(1,'rgba(48,209,88,0)');
+  ctx.beginPath();ctx.moveTo(0,nm[0]);
+  for(let i=1;i<nm.length;i++)ctx.lineTo(i*step,nm[i]);
+  ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.closePath();ctx.fillStyle=gr;ctx.fill();
+  ctx.beginPath();ctx.moveTo(0,nm[0]);
+  for(let i=1;i<nm.length;i++)ctx.lineTo(i*step,nm[i]);
+  ctx.strokeStyle='#30d158';ctx.lineWidth=1.5;ctx.lineJoin='round';ctx.stroke();
+}
+function rHome(){
+  const txs=mTx();
+  const inc=sum(txs,'income'),exp=sum(txs,'expense'),sav=sum(txs,'saving'),bal=inc-exp-sav;
+  const per=`01.${String(curM+1).padStart(2,'0')}.${curY} — ${ld(curM,curY)}.${String(curM+1).padStart(2,'0')}.${curY}`;
+  document.getElementById('hp-sub').textContent=per;
+  const be=document.getElementById('hbal');
+  be.textContent=fs(bal);be.className='hero-num '+(bal>0?'pos':bal<0?'neg':'zer');
+  document.getElementById('hinc').textContent='+'+fmt(inc);
+  document.getElementById('hexp').textContent='-'+fmt(exp);
+  document.getElementById('hsav').textContent='+'+fmt(sav);
+  const now=new Date();
+  const tdExp=S.tx.filter(t=>{const d=new Date(t.date);return t.type==='expense'&&d.getDate()===now.getDate()&&d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear();}).reduce((s,t)=>s+t.amount,0);
+  const wa=new Date();wa.setDate(wa.getDate()-7);
+  const wI=S.tx.filter(t=>t.type==='income'&&new Date(t.date)>=wa).reduce((s,t)=>s+t.amount,0);
+  const wE=S.tx.filter(t=>t.type==='expense'&&new Date(t.date)>=wa).reduce((s,t)=>s+t.amount,0);
+  document.getElementById('ptd').textContent='-'+fmt(tdExp);
+  document.getElementById('pw').textContent=fs(wI-wE);
+  document.getElementById('pm').textContent=fs(bal);
+  if(sav>0){
+    document.getElementById('scChip').style.display='flex';
+    document.getElementById('scVal').textContent='+'+fmt(sav);
+    document.getElementById('scPct').textContent=(inc>0?Math.round(sav/inc*100):0)+'% от дохода';
+  }else{document.getElementById('scChip').style.display='none';}
+  const tips2=[...TIPS];
+  const pct=inc>0?bal/inc*100:0;
+  if(pct>30)tips2.unshift('🔥 Вау! У тебя остаётся больше 30% дохода. Финансовый гений!');
+  if(bal<0)tips2.unshift('⚠️ Расходы превышают доходы в этом месяце. Стоит пересмотреть траты.');
+  document.getElementById('tipT').textContent=tips2[0];
+  document.getElementById('splitLbl').textContent=MN[curM]+' '+curY+' г.';
+  document.getElementById('spInc').textContent=fmt(inc);
+  document.getElementById('spExp').textContent=fmt(exp);
+  const ibc={};txs.filter(t=>t.type==='income').forEach(t=>{ibc[t.cat]=(ibc[t.cat]||0)+t.amount;});
+  document.getElementById('spIncL').innerHTML=Object.entries(ibc).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([id,v])=>{const c=CATS.income.find(x=>x.id===id);return`<div class="srow">${c?c.i+' '+c.n:'Прочее'}<span>${fmt(v)}</span></div>`;}).join('');
+  const ebc={};txs.filter(t=>t.type==='expense').forEach(t=>{ebc[t.cat]=(ebc[t.cat]||0)+t.amount;});
+  document.getElementById('spExpL').innerHTML=Object.entries(ebc).sort((a,b)=>b[1]-a[1]).slice(0,3).map(([id,v])=>{const c=CATS.expense.find(x=>x.id===id);return`<div class="srow">${c?c.i+' '+c.n:'Прочее'}<span>${fmt(v)}</span></div>`;}).join('');
+  const rec=[...S.tx].reverse().slice(0,8);
+  document.getElementById('recList').innerHTML=rec.length?rec.map(txH).join(''):`<div class="empty"><div class="empty-ic">📭</div><div class="empty-tx">Нет операций. Нажми + чтобы добавить!</div></div>`;
+  spark();
+}
+function txH(t){
+  const cats=CATS[t.type]||[];const cat=cats.find(c=>c.id===t.cat);
+  const d=new Date(t.date);const ds=d.getDate()+' '+MG[d.getMonth()];
+  const sign=t.type==='expense'?'-':'+';
+  return`<div class="txi"><div class="txic ${t.type}">${cat?cat.i:'💰'}</div><div class="txb"><div class="txn">${t.desc||(cat?cat.n:'Операция')}</div><div class="txm">${cat?cat.n:''} · ${ds}</div></div><div class="txr"><div class="txa ${t.type}">${sign}${fmt(t.amount)}</div></div></div>`;
+}
+function st(type){
+  curT=type;selC=null;
+  document.querySelectorAll('.tpill').forEach(e=>e.classList.remove('on'));
+  document.querySelector('.tpill.t'+type[0]).classList.add('on');
+  rCats();
+}
+function rCats(){
+  const list=CATS[curT]||[];
+  document.getElementById('catGrid').innerHTML=list.map(c=>`<div class="cchip ${selC===c.id?'on':''}" onclick="sc('${c.id}')"><div class="cchip-ic">${c.i}</div><div class="cchip-nm">${c.n}</div></div>`).join('');
+  document.getElementById('catWrap').style.display=curT==='saving'?'none':'block';
+}
+function sc(id){selC=id;rCats();}
+function doAdd(){
+  const amt=parseFloat(document.getElementById('amtIn').value);
+  const desc=document.getElementById('descIn').value.trim();
+  if(!amt||amt<=0){alert('Введи сумму!');return;}
+  if(curT!=='saving'&&!selC){alert('Выбери категорию!');return;}
+  S.tx.push({id:Date.now(),type:curT,amount:amt,desc,cat:selC,date:new Date().toISOString()});
+  sv();document.getElementById('amtIn').value='';document.getElementById('descIn').value='';selC=null;rCats();go('home');
+}
+function rStats(){
+  const txs=mTx();
+  const inc=sum(txs,'income'),exp=sum(txs,'expense'),bal=inc-exp;
+  document.getElementById('sp-sub').textContent=MN[curM]+' '+curY;
+  const be=document.getElementById('stBal');
+  be.textContent=fs(bal);be.className='hero-num '+(bal>0?'pos':bal<0?'neg':'zer');
+  document.getElementById('stInc').textContent='+'+fmt(inc);
+  document.getElementById('stExp').textContent='-'+fmt(exp);
+  const bc={};txs.filter(t=>t.type==='expense').forEach(t=>{bc[t.cat]=(bc[t.cat]||0)+t.amount;});
+  const sr=Object.entries(bc).sort((a,b)=>b[1]-a[1]);
+  const mx=sr[0]?sr[0][1]:1;
+  document.getElementById('stBars').innerHTML=sr.length?sr.map(([id,v],i)=>{const c=CATS.expense.find(x=>x.id===id);const p=(v/mx*100).toFixed(0);return`<div class="bitem"><div class="bhead"><div class="bnm">${c?c.i:'📦'} ${c?c.n:id}</div><div class="bval" style="color:${BCLR[i%BCLR.length]}">${fmt(v)}</div></div><div class="btrack"><div class="bfill" style="width:${p}%;background:${BCLR[i%BCLR.length]}"></div></div></div>`;}).join(''):`<div class="empty"><div class="empty-ic">📊</div><div class="empty-tx">Нет расходов за этот период</div></div>`;
+  const all=[...txs].sort((a,b)=>new Date(b.date)-new Date(a.date));
+  document.getElementById('allTx').innerHTML=all.length?all.map(txH).join(''):`<div class="empty"><div class="empty-ic">📭</div><div class="empty-tx">Нет операций</div></div>`;
+}
+function doGoal(){
+  const nm=document.getElementById('gName').value.trim();
+  const tgt=parseFloat(document.getElementById('gTarget').value);
+  if(!nm){alert('Введи название!');return;}
+  if(!tgt||tgt<=0){alert('Введи сумму цели!');return;}
+  S.goals.push({id:Date.now(),name:nm,target:tgt});sv();
+  document.getElementById('gName').value='';document.getElementById('gTarget').value='';
+  rSavings();
+}
+function delG(id){S.goals=S.goals.filter(g=>g.id!==id);sv();rSavings();}
+function rSavings(){
+  const ts=S.tx.filter(t=>t.type==='saving').reduce((s,t)=>s+t.amount,0);
+  document.getElementById('goalsList').innerHTML=S.goals.length?S.goals.map(g=>{const p=Math.min(100,ts/g.target*100).toFixed(0);return`<div class="gcard"><div class="ghead"><div><div class="gnm">${g.name}</div><div style="font-size:11px;color:var(--sub);margin-top:2px">Всего накоплено</div></div><div class="gamt">${fmt(ts)}</div></div><div class="gtrack"><div class="gfill" style="width:${p}%"></div></div><div class="gfoot"><div class="gpct">${p}% выполнено</div><div style="display:flex;align-items:center;gap:8px"><div class="gtgt">Цель: ${fmt(g.target)}</div><button class="gdel" onclick="delG(${g.id})">✕</button></div></div></div>`;}).join(''):`<div class="empty"><div class="empty-ic">🎯</div><div class="empty-tx">Создай первую цель накопления!</div></div>`;
+}
+st('income');rHome();
+</script>
+
+</body>
+</html>
